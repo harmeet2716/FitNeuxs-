@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Home, LayoutDashboard, Dumbbell, Activity, LineChart, 
-    Apple, Bot, Users, Settings, LogOut, FileText, LayoutGrid, Heart
+    Apple, Bot, Users, Settings, LogOut, FileText, LayoutGrid
 } from 'lucide-react';
+import { Heart } from 'lucide-react';
 
 const navItems = [
     { name: 'Dashboard', icon: LayoutGrid, href: '/dashboard' },
