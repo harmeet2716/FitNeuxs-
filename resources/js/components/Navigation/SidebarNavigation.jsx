@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Home, LayoutDashboard, Dumbbell, Activity, LineChart, 
-    Apple, Bot, Users, Settings, LogOut, FileText, LayoutGrid
+    Apple, Bot, Users, Settings, LogOut, FileText, LayoutGrid, Heart
 } from 'lucide-react';
 
 const navItems = [
