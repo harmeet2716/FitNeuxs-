@@ -13,6 +13,7 @@
         <link href="https://fonts.bunny.net/css?family=outfit:400,500,600,700|syncopate:400,700&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
+        @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased text-slate-100 bg-[#0A0A0B]">
