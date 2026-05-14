@@ -25,9 +25,13 @@ export default {
             },
             keyframes: {
                 float: {
-                    '0%, 100%': { transform: 'translateY(0)' },
-                    '50%': { transform: 'translateY(-20px)' },
+                    '0%, 100%': { transform: 'translateY(0px)' },
+                    '50%': { transform: 'translateY(-10px)' },
                 }
+            },
+            boxShadow: {
+                'cyan-glow': '0 0 20px rgba(0, 242, 255, 0.3)',
+                'purple-glow': '0 0 20px rgba(112, 0, 255, 0.3)',
             }
         },
     },

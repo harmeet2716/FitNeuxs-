@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Bot, User, Sparkles, Mic, Paperclip, ChevronLeft, Zap } from 'lucide-react';
+import { Send, Bot, User, Sparkles, Mic, Zap } from 'lucide-react';
+import WeightlessInput from '../Common/WeightlessInput';
 
 export default function AICoach() {
     const [messages, setMessages] = useState([
@@ -9,7 +10,7 @@ export default function AICoach() {
     const [input, setInput] = useState('');
 
     const handleSend = (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         if (!input.trim()) return;
 
         const userMsg = { id: Date.now(), role: 'user', text: input };
@@ -27,9 +28,13 @@ export default function AICoach() {
     };
 
     return (
-        <div className="w-full max-w-[1000px] mx-auto h-[calc(100vh-160px)] flex flex-col space-y-8 bg-obsidian/20">
+        <div className="w-full max-w-[1000px] mx-auto h-[calc(100vh-200px)] flex flex-col space-y-8">
             {/* Minimal Dark Header */}
-            <div className="flex justify-between items-center bg-white/5 backdrop-blur-3xl rounded-[2rem] p-8 shadow-2xl border border-white/10 relative overflow-hidden group">
+            <motion.div 
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="flex justify-between items-center bg-white/5 backdrop-blur-3xl rounded-[2rem] p-8 shadow-2xl border border-white/10 relative overflow-hidden group float-animation"
+            >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-glow/10 blur-[60px] rounded-full group-hover:scale-150 transition-transform duration-1000"></div>
                 
                 <div className="flex items-center gap-6 relative z-10">
@@ -44,7 +49,7 @@ export default function AICoach() {
                         </div>
                     </div>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-4 relative z-10">
                     <button className="w-12 h-12 rounded-xl border border-white/5 bg-white/5 flex items-center justify-center text-white/40 hover:text-white transition-all">
                         <Sparkles size={20} />
                     </button>
@@ -52,11 +57,15 @@ export default function AICoach() {
                         <Zap size={20} />
                     </button>
                 </div>
-            </div>
+            </motion.div>
 
             {/* Futuristic Chat Area */}
-            <div className="flex-1 bg-white/5 backdrop-blur-3xl rounded-[3rem] shadow-2xl border border-white/10 overflow-hidden flex flex-col">
-                <div className="flex-1 overflow-y-auto p-10 space-y-8 no-scrollbar">
+            <motion.div 
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="flex-1 bg-white/5 backdrop-blur-3xl rounded-[3rem] shadow-2xl border border-white/10 overflow-hidden flex flex-col relative"
+            >
+                <div className="flex-1 overflow-y-auto p-10 space-y-8 no-scrollbar scroll-smooth">
                     <AnimatePresence>
                         {messages.map((msg) => (
                             <motion.div 
@@ -89,32 +98,27 @@ export default function AICoach() {
 
                 {/* Cyberpunk Input Area */}
                 <div className="p-10 pt-0">
-                    <form onSubmit={handleSend} className="relative group">
-                        <input 
-                            type="text" 
+                    <div className="relative">
+                        <WeightlessInput 
                             placeholder="Enter neural command..."
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-6 pl-10 pr-40 text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-glow/20 focus:border-cyan-glow/50 transition-all font-bold shadow-inner backdrop-blur-xl"
+                            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                         />
-                        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-3">
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-3">
                             <button type="button" className="w-10 h-10 rounded-xl text-white/20 hover:text-white transition-colors">
                                 <Mic size={20} />
                             </button>
-                            <button type="button" className="w-10 h-10 rounded-xl text-white/20 hover:text-white transition-colors">
-                                <Paperclip size={20} />
-                            </button>
                             <button 
-                                type="submit" 
-                                className="px-6 h-12 rounded-xl bg-cyan-glow text-black flex items-center justify-center hover:scale-105 transition-all shadow-[0_0_20px_rgba(0,242,255,0.3)] font-black text-[10px] uppercase tracking-widest font-syncopate"
+                                onClick={() => handleSend()}
+                                className="w-12 h-12 rounded-xl bg-cyan-glow text-black flex items-center justify-center hover:scale-105 transition-all shadow-[0_0_20px_rgba(0,242,255,0.3)]"
                             >
-                                <Send size={18} className="mr-2" />
-                                Send
+                                <Send size={18} />
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 }

@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Activity, Flame, Trophy, TrendingUp, Heart, BatteryCharging, 
     CalendarCheck, Target, ChevronRight, Search, Mic, MoreVertical, Plus, 
@@ -9,6 +9,10 @@ import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     BarChart, Bar, Cell
 } from 'recharts';
+import OrbitalProgress from '../Common/OrbitalProgress';
+import LevitatingLogger from '../Common/LevitatingLogger';
+import WeightlessInput from '../Common/WeightlessInput';
+import WorkoutCard from './WorkoutCard';
 
 const weightData = [
     { name: 'Mon', value: 85.2 },
@@ -18,16 +22,6 @@ const weightData = [
     { name: 'Fri', value: 84.7 },
     { name: 'Sat', value: 84.5 },
     { name: 'Sun', value: 84.3 },
-];
-
-const activityData = [
-    { name: 'Sun', protein: 80, carbs: 40 },
-    { name: 'Mon', protein: 110, carbs: 60 },
-    { name: 'Tue', protein: 90, carbs: 70 },
-    { name: 'Wed', protein: 100, carbs: 55 },
-    { name: 'Thu', protein: 120, carbs: 85 },
-    { name: 'Fri', protein: 85, carbs: 65 },
-    { name: 'Sat', protein: 95, carbs: 75 },
 ];
 
 const WellnessCard = ({ label, value, unit, icon: Icon, color, progress, trend }) => (
@@ -73,9 +67,33 @@ const WellnessCard = ({ label, value, unit, icon: Icon, color, progress, trend }
     </motion.div>
 );
 
+const MacroSection = () => (
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="bg-white/5 backdrop-blur-3xl rounded-[2.5rem] p-8 border border-white/10 flex flex-col items-center justify-center float-animation shadow-2xl">
+            <OrbitalProgress progress={75} color="#00F2FF" label="Protein" size={140} />
+            <p className="mt-6 text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">150g / 200g</p>
+        </div>
+        <div className="bg-white/5 backdrop-blur-3xl rounded-[2.5rem] p-8 border border-white/10 flex flex-col items-center justify-center float-animation shadow-2xl" style={{ animationDelay: '0.5s' }}>
+            <OrbitalProgress progress={45} color="#7000FF" label="Carbs" size={140} />
+            <p className="mt-6 text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">120g / 250g</p>
+        </div>
+        <div className="bg-white/5 backdrop-blur-3xl rounded-[2.5rem] p-8 border border-white/10 flex flex-col items-center justify-center float-animation shadow-2xl" style={{ animationDelay: '1s' }}>
+            <OrbitalProgress progress={60} color="#FF007A" label="Fats" size={140} />
+            <p className="mt-6 text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">45g / 75g</p>
+        </div>
+        <div className="bg-white/5 backdrop-blur-3xl rounded-[2.5rem] p-8 border border-white/10 flex flex-col items-center justify-center float-animation shadow-2xl" style={{ animationDelay: '1.5s' }}>
+            <OrbitalProgress progress={90} color="#FF9900" label="Kcal" size={140} />
+            <p className="mt-6 text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">2100 / 2400</p>
+        </div>
+    </div>
+);
+
 export default function Dashboard({ userName = "Athlete" }) {
+    const [isLoggerOpen, setIsLoggerOpen] = useState(false);
+    const [logType, setLogType] = useState('food'); // 'food' or 'workout'
+
     return (
-        <div className="w-full max-w-[1400px] mx-auto px-6 py-8 space-y-12 bg-black min-h-screen">
+        <div className="w-full max-w-[1400px] mx-auto px-6 py-8 pb-40 space-y-12 bg-black min-h-screen">
             {/* Minimal Mobile Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 pt-4">
                 <div>
@@ -104,9 +122,19 @@ export default function Dashboard({ userName = "Athlete" }) {
             {/* Quick Metrics Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <WellnessCard label="Recovery" value="84" unit="%" icon={BatteryCharging} color="emerald" progress={0.84} trend="+5.2%" />
-                <WellnessCard label="Sleep Architecture" value="7.5" unit="Hrs" icon={Moon} color="purple" progress={0.75} trend="Optimal" />
                 <WellnessCard label="Cardiac Strain" value="62" unit="Bpm" icon={Heart} color="rose" progress={0.62} trend="Low" />
                 <WellnessCard label="Hydration Flux" value="2.8" unit="L" icon={Droplets} color="blue" progress={0.7} trend="Target 4.0L" />
+                <WellnessCard label="Brain State" value="Alpha" unit="" icon={BrainCircuit} color="cyan" progress={0.9} trend="Focused" />
+            </div>
+
+            {/* Orbital Progress Section */}
+            <div>
+                <div className="flex justify-between items-center mb-8">
+                    <h3 className="text-xl font-black text-white tracking-widest font-syncopate uppercase text-[10px]">Orbital Biometrics</h3>
+                    <div className="h-px flex-1 bg-white/5 mx-8"></div>
+                    <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em]">Daily Targets</span>
+                </div>
+                <MacroSection />
             </div>
 
             {/* Hero Analytics & AI Insights */}
@@ -190,22 +218,58 @@ export default function Dashboard({ userName = "Athlete" }) {
                         ))}
                     </div>
 
-                    {/* Featured Live Program Card */}
-                    <div className="bg-cyan-glow rounded-[2.5rem] p-8 text-black shadow-[0_0_50px_rgba(0,242,255,0.3)] group cursor-pointer relative overflow-hidden float-animation">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/30 blur-3xl rounded-full translate-x-10 -translate-y-10 group-hover:scale-150 transition-transform duration-700"></div>
-                        <div className="relative z-10">
-                            <h3 className="text-2xl font-black tracking-tighter mb-4 italic font-syncopate uppercase text-lg">Nexus-Protocol: Phase 2</h3>
-                            <p className="text-black/70 text-sm font-bold mb-8">Initiate weightless resistance training sequences.</p>
-                            <button className="w-full py-4 bg-black rounded-2xl text-white font-black text-[10px] uppercase tracking-[0.2em] shadow-xl group-hover:scale-105 transition-transform">Start Sequence</button>
-                        </div>
-                    </div>
+                    <WorkoutCard 
+                        title="Quantum Agility" 
+                        time={45} 
+                        calories={320} 
+                        exercises={[
+                            { name: 'Zero-G Lunges', sets: 4, reps: '15' },
+                            { name: 'Phase Burpees', sets: 3, reps: '20' },
+                            { name: 'Core Orbital Holds', sets: 3, reps: '60s' }
+                        ]} 
+                    />
                 </div>
             </div>
+
+            {/* Levitating Logger Modal */}
+            <LevitatingLogger 
+                isOpen={isLoggerOpen} 
+                onClose={() => setIsLoggerOpen(false)}
+                title={logType === 'food' ? "Bio-Signal Logger" : "Sequence Logger"}
+            >
+                <div className="space-y-8">
+                    {logType === 'food' ? (
+                        <>
+                            <WeightlessInput label="Nutrient Source" placeholder="Enter food name..." />
+                            <div className="grid grid-cols-3 gap-6">
+                                <WeightlessInput label="Protein (g)" placeholder="0" type="number" />
+                                <WeightlessInput label="Carbs (g)" placeholder="0" type="number" />
+                                <WeightlessInput label="Fats (g)" placeholder="0" type="number" />
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <WeightlessInput label="Sequence Name" placeholder="Select workout..." />
+                            <WeightlessInput label="Intensity Offset" placeholder="0%" type="number" />
+                        </>
+                    )}
+                    <button 
+                        onClick={() => setIsLoggerOpen(false)}
+                        className="w-full py-6 bg-cyan-glow text-black rounded-2xl font-black text-[12px] uppercase tracking-[0.3em] shadow-[0_0_30px_rgba(0,242,255,0.4)] hover:shadow-cyan-glow transition-all"
+                    >
+                        Sync To Nexus
+                    </button>
+                </div>
+            </LevitatingLogger>
 
             {/* Futuristic Floating FAB */}
             <motion.button 
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
+                onClick={() => {
+                    setLogType('food');
+                    setIsLoggerOpen(true);
+                }}
                 className="fixed bottom-10 right-10 w-24 h-24 bg-cyan-glow text-black rounded-full shadow-[0_0_50px_rgba(0,242,255,0.5)] flex items-center justify-center z-50 border-8 border-obsidian group"
             >
                 <Plus size={40} strokeWidth={4} className="group-hover:scale-125 transition-transform" />

@@ -12,7 +12,7 @@
   --text-main: #FFFFFF;
   --text-muted: #94A3B8;
   --border-glass: rgba(255, 255, 255, 0.05);
-  --shadow-cyan: 0 0 30px rgba(0, 242, 255, 0.3);
+  --shadow-cyan: 0 0 20px rgba(0, 242, 255, 0.3);
   
   /* Shared values */
   --font-main: 'Outfit', sans-serif;
@@ -163,6 +163,6 @@ body {
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
+  50% { transform: translateY(-10px); }
 }
 

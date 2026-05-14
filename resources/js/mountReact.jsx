@@ -9,6 +9,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import WorkoutPage from './components/Workout/WorkoutPage';
 import AICoach from './components/AICoach/AICoach';
 import WellnessHub from './components/Wellness/WellnessHub';
+import BottomNavigation from './components/Navigation/BottomNavigation';
 
 const mountComponent = (id, Component, props = {}) => {
     const el = document.getElementById(id);
@@ -31,3 +32,4 @@ mountComponent('dashboard-root', Dashboard);
 mountComponent('workout-page-root', WorkoutPage);
 mountComponent('ai-coach-root', AICoach);
 mountComponent('wellness-hub-root', WellnessHub);
+mountComponent('bottom-navigation-root', BottomNavigation);

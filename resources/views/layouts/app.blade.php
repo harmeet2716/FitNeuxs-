@@ -24,6 +24,9 @@
             <main class="flex-1 px-4 py-8 sm:px-6 lg:px-10 xl:px-12 lg:ml-28 w-full max-w-[100vw] overflow-x-hidden">
                 {{ $slot }}
             </main>
+
+            <!-- Bottom Navigation Mount Point -->
+            <div id="bottom-navigation-root" data-path="{{ request()->path() }}"></div>
         </div>
     </body>
 </html>
