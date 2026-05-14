@@ -11,6 +11,8 @@ import AICoach from './components/AICoach/AICoach';
 import WellnessHub from './components/Wellness/WellnessHub';
 import BottomNavigation from './components/Navigation/BottomNavigation';
 
+import PricingPage from './components/Pricing/PricingPage';
+
 const mountComponent = (id, Component, props = {}) => {
     const el = document.getElementById(id);
     if (el) {
@@ -33,3 +35,4 @@ mountComponent('workout-page-root', WorkoutPage);
 mountComponent('ai-coach-root', AICoach);
 mountComponent('wellness-hub-root', WellnessHub);
 mountComponent('bottom-navigation-root', BottomNavigation);
+mountComponent('pricing-page-root', PricingPage);

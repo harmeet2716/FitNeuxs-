@@ -27,6 +27,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/progress', [\App\Http\Controllers\ProgressController::class, 'index'])->name('progress.index');
     Route::get('/wellness', function() { return view('wellness'); })->name('wellness');
     Route::get('/ai-coach', function() { return view('ai-coach'); })->name('ai-coach');
+    Route::get('/nutrition', function() { return view('nutrition'); })->name('nutrition');
+    Route::get('/pricing', function() { return view('pricing'); })->name('pricing');
+    Route::get('/settings', [ProfileController::class, 'edit'])->name('settings');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
