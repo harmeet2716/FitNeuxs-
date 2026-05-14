@@ -15,12 +15,22 @@ import PricingPage from './components/Pricing/PricingPage';
 
 import ProfileSettings from './components/Profile/ProfileSettings';
 
-const mountComponent = (id, Component, props = {}) => {
+const mountComponent = (id, Component, initialProps = {}) => {
     const el = document.getElementById(id);
     if (el) {
-        // Read props from data attributes if provided
-        const path = el.dataset.path;
-        if (path) props.currentPath = path;
+        const props = { ...initialProps };
+        
+        // Automatically parse all data-* attributes
+        Object.keys(el.dataset).forEach(key => {
+            try {
+                props[key] = JSON.parse(el.dataset[key]);
+            } catch (e) {
+                props[key] = el.dataset[key];
+            }
+        });
+
+        // Specific legacy mapping for path
+        if (el.dataset.path) props.currentPath = el.dataset.path;
         
         const root = createRoot(el);
         root.render(<Component {...props} />);

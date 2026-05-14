@@ -50,6 +50,14 @@ const MetricCard = ({ label, value, unit, icon: Icon, color, onChange, units, cu
 );
 
 export default function ProfileSettings({ user, fitnessProfile }) {
+    if (!user) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="animate-pulse text-cyan-400 font-black tracking-widest uppercase">Initializing Neural Link...</div>
+            </div>
+        );
+    }
+
     // Account Info
     const [name, setName] = useState(user.name);
     const [email, setEmail] = useState(user.email);
