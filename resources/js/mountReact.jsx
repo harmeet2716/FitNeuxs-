@@ -14,6 +14,7 @@ import BottomNavigation from './components/Navigation/BottomNavigation';
 import PricingPage from './components/Pricing/PricingPage';
 
 import ProfileSettings from './components/Profile/ProfileSettings';
+import AccountSettings from './components/Profile/AccountSettings';
 
 const mountComponent = (id, Component, initialProps = {}) => {
     const el = document.getElementById(id);
@@ -49,3 +50,4 @@ mountComponent('wellness-hub-root', WellnessHub);
 mountComponent('bottom-navigation-root', BottomNavigation);
 mountComponent('pricing-page-root', PricingPage);
 mountComponent('profile-settings-root', ProfileSettings);
+mountComponent('account-settings-root', AccountSettings);
