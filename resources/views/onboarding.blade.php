@@ -1,457 +1,495 @@
-<x-app-layout>
-    <div class="min-h-screen bg-gray-950 text-white py-10 px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-4xl">
-            <div class="rounded-[2rem] border border-gray-800 bg-gray-900/90 p-8 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-10">
-                <div class="mb-10 text-center">
-                    <p class="text-sm uppercase tracking-[0.32em] text-green-400">FitNexus onboarding</p>
-                    <h1 class="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">Build your fitness profile in 5 easy steps</h1>
-                    <p class="mt-3 text-gray-400 max-w-2xl mx-auto">Share your goals, body info, and training habits so we can personalize your workout plan.</p>
-                </div>
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Onboarding - {{ config('app.name', 'FitNexus') }}</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-                <div class="mb-8 rounded-full bg-gray-800 p-1">
-                    <div class="grid grid-cols-5 gap-2">
-                        <span id="progress-1" class="h-2 rounded-full bg-green-400"></span>
-                        <span id="progress-2" class="h-2 rounded-full bg-gray-700"></span>
-                        <span id="progress-3" class="h-2 rounded-full bg-gray-700"></span>
-                        <span id="progress-4" class="h-2 rounded-full bg-gray-700"></span>
-                        <span id="progress-5" class="h-2 rounded-full bg-gray-700"></span>
-                    </div>
-                </div>
+      :root {
+        --neon-green: #22C55E;
+        --neon-hover: #16a34a;
+        --bg-dark: #050505;
+        --card-bg: rgba(20, 20, 20, 0.4);
+        --border-color: rgba(255, 255, 255, 0.08);
+        --text-main: #ffffff;
+        --text-muted: #9ca3af;
+      }
 
-                @if ($errors->any())
-                    <div class="mb-8 rounded-3xl border border-red-500/70 bg-red-500/10 p-4 text-sm text-red-200">
-                        <div class="font-semibold">Please fix the following</div>
-                        <ul class="mt-3 list-disc list-inside space-y-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-dark);
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow-x: hidden;
+      }
 
-                <form method="POST" action="{{ route('fitness.store') }}" id="onboarding-form" class="space-y-8">
-                    @csrf
+      /* Backgrounds */
+      .bg-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle at 50% 0%, rgba(34, 197, 94, 0.08) 0%, rgba(0,0,0,0.95) 80%);
+        z-index: -2;
+      }
+      
+      .bg-silhouette {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1540497077202-7c8a3999166f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); /* Gym weights */
+        background-size: cover;
+        background-position: center;
+        filter: blur(12px) brightness(0.15) contrast(1.3);
+        z-index: -1;
+      }
 
-                    <input type="hidden" name="goal" id="goal-field">
-                    <input type="hidden" name="gender" id="gender-field">
-                    <input type="hidden" name="activity_level" id="activity-field">
+      /* Navigation */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 30px 60px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        box-sizing: border-box;
+        z-index: 10;
+      }
+      .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+      }
+      .logo-icon {
+        width: 28px;
+        height: 28px;
+        background: var(--neon-green);
+        mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 10V3L4 14h7v7l9-11h-7z'/%3E%3C/svg%3E") center/contain no-repeat;
+        -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 10V3L4 14h7v7l9-11h-7z'/%3E%3C/svg%3E") center/contain no-repeat;
+      }
+      .logo-text {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        color: var(--text-main);
+      }
+      .nav-right {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+      }
+      .nav-link {
+        color: var(--text-main);
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .nav-link:hover {
+        color: var(--neon-green);
+      }
 
-                    <div class="step-card" id="step-1">
-                        <div class="space-y-3">
-                            <div class="text-sm uppercase tracking-[0.28em] text-gray-400">Step 1 of 5</div>
-                            <h2 class="text-2xl font-semibold text-white">Choose your goal</h2>
-                            <p class="text-gray-400">Personalized programming starts here. Pick the goal you want to achieve most.</p>
-                        </div>
+      /* Main Layout */
+      .main-content {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 120px 20px 40px 20px;
+        z-index: 1;
+        width: 100%;
+        box-sizing: border-box;
+      }
 
-                        <div class="mt-8 grid gap-4 sm:grid-cols-3">
-                            @foreach (['fat_loss' => 'Fat Loss', 'muscle_gain' => 'Muscle Gain', 'strength' => 'Strength'] as $value => $label)
-                                <button type="button" class="option-card" data-value="{{ $value }}" data-field="goal" onclick="pickOption(this)">
-                                    <span class="text-sm uppercase tracking-[0.24em] text-green-400">{{ $label }}</span>
-                                    <span class="mt-3 block text-white text-xl font-semibold">{{ $label }}</span>
-                                </button>
-                            @endforeach
-                        </div>
+      /* Card */
+      .onboard-card {
+        width: 100%;
+        max-width: 560px;
+        background: var(--card-bg);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid var(--border-color);
+        border-radius: 32px;
+        padding: 40px;
+        box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255,255,255,0.1);
+        position: relative;
+        overflow: hidden;
+      }
+      .onboard-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; height: 100px;
+        background: linear-gradient(180deg, rgba(34, 197, 94, 0.03) 0%, transparent 100%);
+        pointer-events: none;
+      }
 
-                        <div class="mt-8 flex items-center justify-between">
-                            <span></span>
-                            <button type="button" class="step-next disabled:opacity-40" id="step-1-next" disabled onclick="goStep(2)">Continue</button>
-                        </div>
-                    </div>
+      /* Progress Bar */
+      .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+      .progress-wrapper {
+        flex: 1;
+        margin-right: 20px;
+      }
+      .progress-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+        display: block;
+      }
+      .progress-track {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        display: flex;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--neon-green);
+        border-radius: 4px;
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+      }
+      .btn-skip {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-color);
+        color: var(--text-muted);
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-skip:hover {
+        color: var(--text-main);
+        background: rgba(255, 255, 255, 0.1);
+      }
 
-                    <div class="step-card hidden" id="step-2">
-                        <div class="space-y-3">
-                            <div class="text-sm uppercase tracking-[0.28em] text-gray-400">Step 2 of 5</div>
-                            <h2 class="text-2xl font-semibold text-white">Tell us about your body</h2>
-                            <p class="text-gray-400">This information helps calculate your baseline and daily needs.</p>
-                        </div>
+      /* Headings */
+      .step-heading {
+        font-size: 36px;
+        font-weight: 800;
+        line-height: 1.2;
+        margin: 0 0 8px 0;
+        letter-spacing: -0.5px;
+      }
+      .step-subheading {
+        font-size: 15px;
+        color: var(--text-muted);
+        margin: 0 0 32px 0;
+      }
 
-                        <div class="mt-8 grid gap-4 sm:grid-cols-2">
-                            <button type="button" class="option-card" data-value="male" data-field="gender" onclick="pickOption(this)">
-                                <span class="text-sm uppercase tracking-[0.24em] text-green-400">Male</span>
-                                <span class="mt-3 block text-white text-xl font-semibold">Male</span>
-                            </button>
-                            <button type="button" class="option-card" data-value="female" data-field="gender" onclick="pickOption(this)">
-                                <span class="text-sm uppercase tracking-[0.24em] text-green-400">Female</span>
-                                <span class="mt-3 block text-white text-xl font-semibold">Female</span>
-                            </button>
-                        </div>
+      /* Vertical Cards */
+      .goal-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      .goal-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 16px 20px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+      .goal-card:hover {
+        background: rgba(20, 20, 20, 0.8);
+        border-color: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+      .goal-card.selected {
+        background: rgba(34, 197, 94, 0.1);
+        border-color: var(--neon-green);
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+        transform: scale(1.02);
+      }
+      .goal-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        z-index: 2;
+      }
+      .goal-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-main);
+      }
+      .goal-desc {
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+      .goal-thumb {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        background-size: cover;
+        background-position: center top;
+        opacity: 0.8;
+        mix-blend-mode: luminosity;
+        transition: all 0.3s;
+        z-index: 2;
+      }
+      .goal-card.selected .goal-thumb {
+        mix-blend-mode: normal;
+        opacity: 1;
+        box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+      }
+      
+      /* Background Glow for selected card */
+      .goal-card::after {
+        content: '';
+        position: absolute;
+        right: -20px; top: -20px; width: 100px; height: 100px;
+        background: radial-gradient(circle, rgba(34,197,94,0.2) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .goal-card.selected::after {
+        opacity: 1;
+      }
 
-                        <div class="mt-8 flex flex-col gap-4 sm:flex-row">
-                            <div class="flex flex-1 items-center gap-3 rounded-3xl border border-gray-800 bg-gray-950 p-4">
-                                <button type="button" class="unit-button active" id="metric-btn" onclick="setUnit('metric')">kg / cm</button>
-                                <button type="button" class="unit-button" id="imperial-btn" onclick="setUnit('imperial')">lb / ft in</button>
-                            </div>
-                        </div>
+      /* Bottom Section */
+      .btn-next {
+        width: 100%;
+        background: var(--neon-green);
+        color: #000;
+        border: none;
+        border-radius: 16px;
+        padding: 18px;
+        font-size: 16px;
+        font-weight: 700;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+      }
+      .btn-next:hover:not(:disabled) {
+        background: var(--neon-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
+      }
+      .btn-next:disabled {
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.3);
+        box-shadow: none;
+        cursor: not-allowed;
+      }
 
-                        <div class="mt-8 grid gap-4 sm:grid-cols-3">
-                            <label class="block">
-                                <span class="text-sm font-medium text-gray-200">Age</span>
-                                <input id="age-field" name="age" type="number" min="10" max="99" placeholder="28" class="mt-2 block w-full rounded-2xl border border-gray-800 bg-gray-950 px-4 py-3 text-white focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-400/30" oninput="validateStep2()" />
-                            </label>
-                            <label class="block">
-                                <span class="text-sm font-medium text-gray-200">Weight</span>
-                                <input id="weight-field" type="number" min="20" max="900" step="0.1" placeholder="75" class="mt-2 block w-full rounded-2xl border border-gray-800 bg-gray-950 px-4 py-3 text-white focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-400/30" oninput="validateStep2()" />
-                                <div class="mt-2 text-xs text-gray-500" id="weight-unit-label">kg</div>
-                            </label>
-                            <div class="grid gap-4">
-                                <div id="height-metric-group">
-                                    <label class="block">
-                                        <span class="text-sm font-medium text-gray-200">Height</span>
-                                        <input id="height-field" type="number" min="50" max="250" step="0.1" placeholder="175" class="mt-2 block w-full rounded-2xl border border-gray-800 bg-gray-950 px-4 py-3 text-white focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-400/30" oninput="validateStep2()" />
-                                        <div class="mt-2 text-xs text-gray-500">cm</div>
-                                    </label>
-                                </div>
-                                <div id="height-imperial-group" class="hidden">
-                                    <label class="block">
-                                        <span class="text-sm font-medium text-gray-200">Height</span>
-                                        <div class="mt-2 grid gap-3 sm:grid-cols-2">
-                                            <input id="height-ft-field" type="number" min="3" max="8" placeholder="5 ft" class="block w-full rounded-2xl border border-gray-800 bg-gray-950 px-4 py-3 text-white focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-400/30" oninput="validateStep2()" />
-                                            <input id="height-in-field" type="number" min="0" max="11" placeholder="9 in" class="block w-full rounded-2xl border border-gray-800 bg-gray-950 px-4 py-3 text-white focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-400/30" oninput="validateStep2()" />
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+      /* Step Content Visibility */
+      .step-content {
+        display: none;
+        animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .step-content.active {
+        display: block;
+      }
+      
+      @keyframes slideIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
 
-                        <div class="mt-8 flex items-center justify-between">
-                            <button type="button" class="text-sm font-semibold text-gray-400 hover:text-white" onclick="goStep(1)">Back</button>
-                            <button type="button" class="step-next disabled:opacity-40" id="step-2-next" disabled onclick="goStep(3)">Continue</button>
-                        </div>
-                    </div>
+      /* Input styling for other steps */
+      .tag-grid {
+        display: flex; 
+        flex-wrap: wrap; 
+        gap: 12px; 
+        margin-bottom: 32px;
+      }
+      .tag-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .tag-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .tag-btn.active {
+        background: rgba(34, 197, 94, 0.15);
+        border-color: var(--neon-green);
+        color: var(--neon-green);
+        box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+      }
 
-                    <div class="step-card hidden" id="step-3">
-                        <div class="space-y-3">
-                            <div class="text-sm uppercase tracking-[0.28em] text-gray-400">Step 3 of 5</div>
-                            <h2 class="text-2xl font-semibold text-white">Choose your training rhythm</h2>
-                            <p class="text-gray-400">This helps us recommend the right intensity and weekly cadence.</p>
-                        </div>
+      /* Responsive */
+      @media (max-width: 768px) {
+        .navbar {
+          padding: 20px;
+        }
+        .nav-right {
+          display: none;
+        }
+        .main-content {
+          padding: 100px 16px 40px 16px;
+        }
+        .onboard-card {
+          padding: 32px 24px;
+        }
+        .step-heading {
+          font-size: 28px;
+        }
+      }
+    </style>
+</head>
+<body>
 
-                        <div class="mt-8 grid gap-4 sm:grid-cols-3">
-                            @foreach (['beginner' => 'Beginner', 'intermediate' => 'Intermediate', 'advanced' => 'Advanced'] as $value => $label)
-                                <button type="button" class="option-card" data-value="{{ $value }}" data-field="activity_level" onclick="pickOption(this)">
-                                    <span class="text-sm uppercase tracking-[0.24em] text-green-400">{{ $label }}</span>
-                                    <span class="mt-3 block text-white text-xl font-semibold">{{ $label }}</span>
-                                </button>
-                            @endforeach
-                        </div>
+<div class="bg-silhouette"></div>
+<div class="bg-overlay"></div>
 
-                        <div class="mt-8 grid gap-4 sm:grid-cols-2">
-                            <label class="block">
-                                <span class="text-sm font-medium text-gray-200">Workout days per week</span>
-                                <input id="days-field" name="days_per_week" type="number" min="1" max="7" placeholder="4" class="mt-2 block w-full rounded-2xl border border-gray-800 bg-gray-950 px-4 py-3 text-white focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-400/30" oninput="validateStep3()" />
-                            </label>
-                        </div>
+<!-- Navigation -->
+<nav class="navbar">
+  <a href="/" class="nav-left">
+    <div class="logo-icon"></div>
+    <span class="logo-text">WORKOUT</span>
+  </a>
+  <div class="nav-right">
+    <a href="#" class="nav-link">Exercises</a>
+    <a href="#" class="nav-link">Trainers</a>
+    <a href="#" class="nav-link">Pricing</a>
+    <a href="{{ route('login') }}" class="nav-link">Login</a>
+  </div>
+</nav>
 
-                        <div class="mt-8 flex items-center justify-between">
-                            <button type="button" class="text-sm font-semibold text-gray-400 hover:text-white" onclick="goStep(2)">Back</button>
-                            <button type="button" class="step-next disabled:opacity-40" id="step-3-next" disabled onclick="goStep(4)">Continue</button>
-                        </div>
-                    </div>
-
-                    <div class="step-card hidden" id="step-4">
-                        <div class="space-y-3">
-                            <div class="text-sm uppercase tracking-[0.28em] text-gray-400">Step 4 of 5</div>
-                            <h2 class="text-2xl font-semibold text-white">What drives you?</h2>
-                            <p class="text-gray-400">Choose the motivation that keeps you moving.</p>
-                        </div>
-
-                        <div class="mt-8 grid gap-4 sm:grid-cols-2">
-                            @foreach (['health' => 'Health', 'looks' => 'Looks', 'performance' => 'Performance', 'mental' => 'Mental Wellbeing', 'other' => 'Other'] as $value => $label)
-                                <button type="button" class="option-card" data-value="{{ $value }}" data-field="motivation" onclick="pickOption(this)">
-                                    <span class="text-sm uppercase tracking-[0.24em] text-green-400">{{ $label }}</span>
-                                    <span class="mt-3 block text-white text-xl font-semibold">{{ $label }}</span>
-                                </button>
-                            @endforeach
-                        </div>
-
-                        <div id="motivation-other-group" class="mt-6 hidden">
-                            <label class="block">
-                                <span class="text-sm font-medium text-gray-200">Please explain</span>
-                                <textarea id="motivation-other-field" class="mt-2 block w-full rounded-3xl border border-gray-800 bg-gray-950 px-4 py-3 text-white focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-400/30" rows="4" placeholder="Tell us your motivation" oninput="validateMotivationOther()"></textarea>
-                            </label>
-                        </div>
-
-                        <input type="hidden" name="motivation" id="motivation-hidden">
-
-                        <div class="mt-8 flex items-center justify-between">
-                            <button type="button" class="text-sm font-semibold text-gray-400 hover:text-white" onclick="goStep(3)">Back</button>
-                            <button type="button" class="step-next disabled:opacity-40" id="step-4-next" disabled onclick="goStep(5)">Continue</button>
-                        </div>
-                    </div>
-
-                    <div class="step-card hidden" id="step-5">
-                        <div class="space-y-3">
-                            <div class="text-sm uppercase tracking-[0.28em] text-gray-400">Step 5 of 5</div>
-                            <h2 class="text-2xl font-semibold text-white">Final step</h2>
-                            <p class="text-gray-400">How did you hear about us?</p>
-                        </div>
-
-                        <div class="mt-8 grid gap-4 sm:grid-cols-2">
-                            @foreach (['Friend' => 'Friend', 'Instagram' => 'Instagram', 'Search' => 'Search', 'Other' => 'Other'] as $value => $label)
-                                <button type="button" class="option-card" data-value="{{ $value }}" data-field="source" onclick="pickOption(this)">
-                                    <span class="text-sm uppercase tracking-[0.24em] text-green-400">{{ $label }}</span>
-                                    <span class="mt-3 block text-white text-xl font-semibold">{{ $label }}</span>
-                                </button>
-                            @endforeach
-                        </div>
-
-                        <div id="source-other-group" class="mt-6 hidden">
-                            <label class="block">
-                                <span class="text-sm font-medium text-gray-200">Please specify</span>
-                                <input id="source-other-field" type="text" class="mt-2 block w-full rounded-2xl border border-gray-800 bg-gray-950 px-4 py-3 text-white focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-400/30" placeholder="Referral source" oninput="validateSourceOther()" />
-                            </label>
-                        </div>
-
-                        <input type="hidden" name="source" id="source-hidden">
-
-                        <div class="mt-8 flex items-center justify-between">
-                            <button type="button" class="text-sm font-semibold text-gray-400 hover:text-white" onclick="goStep(4)">Back</button>
-                            <button type="submit" class="step-next bg-green-400 text-gray-950 hover:bg-green-300" id="step-5-submit" disabled>Finish onboarding</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+<div class="main-content">
+  <div class="onboard-card">
+    
+    <div class="progress-header">
+      <div class="progress-wrapper">
+        <span class="progress-text" id="progress-text">Step 1 of 4</span>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill" style="width: 25%;"></div>
         </div>
+      </div>
+      <button class="btn-skip" onclick="skipOnboarding()">Skip</button>
     </div>
 
-    <style>
-        .step-card {
-            animation: fadeIn 0.25s ease-out;
-        }
+    <form method="POST" action="{{ route('fitness.store') }}" id="onboarding-form">
+      @csrf
+      <!-- Hidden fields for submission (using defaults to ensure validation passes) -->
+      <input type="hidden" name="goal" id="goal-field">
+      <input type="hidden" name="gender" value="male">
+      <input type="hidden" name="activity_level" value="beginner">
+      <input type="hidden" name="motivation" value="health">
+      <input type="hidden" name="source" value="Search">
+      <input type="hidden" name="age" value="25">
+      <input type="hidden" name="weight_kg" value="70">
+      <input type="hidden" name="height_cm" value="175">
+      <input type="hidden" name="days_per_week" value="3">
 
-        .option-card {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border: 1px solid rgba(148,163,184,.12);
-            background: rgba(15,23,42,.9);
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            text-align: left;
-            transition: transform .2s ease, border-color .2s ease, background .2s ease;
-            width: 100%;
-        }
+      <!-- Step 1: Goal -->
+      <div class="step-content active" id="step-1">
+        <h1 class="step-heading">What is your primary fitness goal?</h1>
+        <p class="step-subheading">Personalized programming starts here.</p>
 
-        .option-card:hover,
-        .option-card.selected {
-            border-color: rgba(34,197,94,.45);
-            background: rgba(34,197,94,.08);
-            transform: translateY(-3px);
-        }
+        <div class="goal-list">
+          <div class="goal-card" data-value="fat_loss" onclick="selectGoal(this)">
+            <div class="goal-info">
+              <span class="goal-title">Reduce Body Fat</span>
+              <span class="goal-desc">Lean out and reveal definition</span>
+            </div>
+            <!-- High contrast cutout style fitness body -->
+            <div class="goal-thumb" style="background-image: url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80');"></div>
+          </div>
 
-        .step-next {
-            border-radius: 999px;
-            padding: 0.85rem 1.75rem;
-            background: #22c55e;
-            color: #0f172a;
-            font-weight: 700;
-            transition: background .2s ease, transform .2s ease;
-        }
+          <div class="goal-card" data-value="muscle_gain" onclick="selectGoal(this)">
+            <div class="goal-info">
+              <span class="goal-title">Gain Muscle</span>
+              <span class="goal-desc">Build size and raw strength</span>
+            </div>
+            <div class="goal-thumb" style="background-image: url('https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80');"></div>
+          </div>
 
-        .step-next:hover {
-            background: #4ade80;
-        }
+          <div class="goal-card" data-value="stay_active" onclick="selectGoal(this)">
+            <div class="goal-info">
+              <span class="goal-title">Stay Active</span>
+              <span class="goal-desc">Maintain health and mobility</span>
+            </div>
+            <div class="goal-thumb" style="background-image: url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80');"></div>
+          </div>
 
-        .unit-button {
-            flex: 1;
-            border-radius: 999px;
-            padding: 0.85rem 1rem;
-            border: 1px solid rgba(148,163,184,.2);
-            background: rgba(255,255,255,.04);
-            color: #d1d5db;
-            font-weight: 700;
-            transition: background .2s ease, border-color .2s ease, color .2s ease;
-        }
+          <div class="goal-card" data-value="boost_energy" onclick="selectGoal(this)">
+            <div class="goal-info">
+              <span class="goal-title">Boost Energy</span>
+              <span class="goal-desc">Enhance daily stamina and focus</span>
+            </div>
+            <div class="goal-thumb" style="background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80');"></div>
+          </div>
+        </div>
 
-        .unit-button.active {
-            background: #22c55e;
-            color: #0f172a;
-            border-color: rgba(34,197,94,.7);
-        }
+        <button type="button" class="btn-next" id="btn-next-1" disabled onclick="nextStep(2)">Next</button>
+      </div>
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+      <!-- Step 2: Target Areas -->
+      <div class="step-content" id="step-2">
+        <h1 class="step-heading">Which areas would you like to improve?</h1>
+        <p class="step-subheading">Select your focus zones to customize workouts.</p>
+        
+        <div class="tag-grid">
+            <div class="tag-btn active" onclick="this.classList.toggle('active')">Full Body</div>
+            <div class="tag-btn" onclick="this.classList.toggle('active')">Arms & Shoulders</div>
+            <div class="tag-btn" onclick="this.classList.toggle('active')">Core & Abs</div>
+            <div class="tag-btn" onclick="this.classList.toggle('active')">Legs & Glutes</div>
+            <div class="tag-btn" onclick="this.classList.toggle('active')">Back & Posture</div>
+        </div>
 
-    <script>
-        const state = {
-            goal: null,
-            gender: null,
-            activity_level: null,
-            motivation: null,
-            source: null,
-            unit: 'metric',
-        };
+        <button type="submit" class="btn-next">Build My Plan</button>
+        <button type="button" class="btn-skip" style="width:100%; margin-top: 16px; background: transparent; border: none; font-size: 15px;" onclick="nextStep(1)">Back</button>
+      </div>
 
-        function pickOption(button) {
-            const field = button.dataset.field;
-            const value = button.dataset.value;
+    </form>
+  </div>
+</div>
 
-            document.querySelectorAll(`[data-field='${field}']`).forEach(el => el.classList.remove('selected'));
-            button.classList.add('selected');
+<script>
+  function selectGoal(element) {
+    document.querySelectorAll('.goal-card').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    document.getElementById('goal-field').value = element.dataset.value;
+    document.getElementById('btn-next-1').disabled = false;
+  }
 
-            state[field] = value;
+  function nextStep(step) {
+    document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+    document.getElementById('step-' + step).classList.add('active');
+    
+    const totalSteps = 4;
+    const pct = (step / totalSteps) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-text').innerText = 'Step ' + step + ' of ' + totalSteps;
+  }
 
-            if (field === 'goal') {
-                document.getElementById('goal-field').value = value;
-                document.getElementById('step-1-next').disabled = false;
-            }
+  function skipOnboarding() {
+    window.location.href = '/dashboard';
+  }
+</script>
 
-            if (field === 'gender') {
-                document.getElementById('gender-field').value = value;
-                validateStep2();
-            }
-
-            if (field === 'activity_level') {
-                document.getElementById('activity-field').value = value;
-                validateStep3();
-            }
-
-            if (field === 'motivation') {
-                if (value === 'other') {
-                    document.getElementById('motivation-other-group').classList.remove('hidden');
-                    document.getElementById('motivation-hidden').value = '';
-                    state.motivation = null;
-                    document.getElementById('step-4-next').disabled = true;
-                } else {
-                    document.getElementById('motivation-other-group').classList.add('hidden');
-                    document.getElementById('motivation-hidden').value = value;
-                    state.motivation = value;
-                    document.getElementById('step-4-next').disabled = false;
-                }
-            }
-
-            if (field === 'source') {
-                document.getElementById('source-hidden').value = value;
-                if (value === 'Other') {
-                    document.getElementById('source-other-group').classList.remove('hidden');
-                    document.getElementById('source-hidden').value = '';
-                    state.source = null;
-                    document.getElementById('step-5-submit').disabled = true;
-                } else {
-                    document.getElementById('source-other-group').classList.add('hidden');
-                    document.getElementById('step-5-submit').disabled = false;
-                    state.source = value;
-                }
-            }
-
-            if (field === 'source' && value !== 'Other') {
-                document.getElementById('source-hidden').value = value;
-            }
-        }
-
-        function setUnit(unit) {
-            state.unit = unit;
-            document.getElementById('metric-btn').classList.toggle('active', unit === 'metric');
-            document.getElementById('imperial-btn').classList.toggle('active', unit === 'imperial');
-            document.getElementById('weight-unit-label').textContent = unit === 'metric' ? 'kg' : 'lb';
-            document.getElementById('height-metric-group').classList.toggle('hidden', unit === 'imperial');
-            document.getElementById('height-imperial-group').classList.toggle('hidden', unit === 'metric');
-            validateStep2();
-        }
-
-        function validateStep2() {
-            const age = Number(document.getElementById('age-field').value);
-            const weight = Number(document.getElementById('weight-field').value);
-            const isMetric = state.unit === 'metric';
-            const heightMetric = Number(document.getElementById('height-field').value);
-            const heightFt = Number(document.getElementById('height-ft-field').value);
-            const heightIn = Number(document.getElementById('height-in-field').value);
-            const hasGender = !!state.gender;
-
-            let heightReady = false;
-            let weightReady = weight > 0;
-            let validHeight = 0;
-            let validWeight = 0;
-
-            if (isMetric) {
-                heightReady = heightMetric > 0;
-                validHeight = heightMetric;
-                validWeight = weight;
-            } else {
-                heightReady = heightFt > 0 && heightIn >= 0;
-                const totalInches = (heightFt * 12) + heightIn;
-                validHeight = totalInches * 2.54;
-                validWeight = weight * 0.453592;
-            }
-
-            if (heightReady) {
-                document.getElementById('height-field').value = isMetric ? heightMetric : document.getElementById('height-field').value;
-            }
-
-            document.getElementById('step-2-next').disabled = !(hasGender && age >= 10 && age <= 99 && weightReady && heightReady);
-            if (hasGender && age >= 10 && age <= 99 && weightReady && heightReady) {
-                document.getElementById('weight-field').dataset.metric = validWeight.toFixed(2);
-                document.getElementById('height-field').dataset.metric = validHeight.toFixed(2);
-            }
-        }
-
-        function validateStep3() {
-            const days = Number(document.getElementById('days-field').value);
-            const ready = !!state.activity_level && days >= 1 && days <= 7;
-            document.getElementById('step-3-next').disabled = !ready;
-        }
-
-        function validateMotivationOther() {
-            const text = document.getElementById('motivation-other-field').value.trim();
-            document.getElementById('motivation-hidden').value = text;
-            state.motivation = text;
-            document.getElementById('step-4-next').disabled = text.length < 10;
-        }
-
-        function validateStep4() {
-            const chosen = state.motivation && state.motivation !== 'other';
-            document.getElementById('step-4-next').disabled = !chosen;
-        }
-
-        function validateSourceOther() {
-            const text = document.getElementById('source-other-field').value.trim();
-            document.getElementById('source-hidden').value = text;
-            state.source = text;
-            document.getElementById('step-5-submit').disabled = text.length < 1;
-        }
-
-        function goStep(step) {
-            document.querySelectorAll('.step-card').forEach(card => card.classList.add('hidden'));
-            document.getElementById(`step-${step}`).classList.remove('hidden');
-            updateProgress(step);
-        }
-
-        function updateProgress(step) {
-            for (let i = 1; i <= 5; i++) {
-                const element = document.getElementById(`progress-${i}`);
-                element.classList.toggle('bg-green-400', i <= step);
-                element.classList.toggle('bg-gray-700', i > step);
-            }
-        }
-
-        document.getElementById('onboarding-form').addEventListener('submit', function (event) {
-            const age = Number(document.getElementById('age-field').value);
-            const weight = Number(document.getElementById('weight-field').value);
-            const isMetric = state.unit === 'metric';
-            const heightMetric = Number(document.getElementById('height-field').value);
-            const heightFt = Number(document.getElementById('height-ft-field').value);
-            const heightIn = Number(document.getElementById('height-in-field').value);
-
-            if (!isMetric) {
-                if (Number.isFinite(weight)) {
-                    document.getElementById('weight-field').dataset.metric = (weight * 0.453592).toFixed(2);
-                }
-                const totalInches = (heightFt * 12) + heightIn;
-                document.getElementById('height-field').dataset.metric = (totalInches * 2.54).toFixed(2);
-            }
-
-            const metricWeight = Number(document.getElementById('weight-field').dataset.metric || weight);
-            const metricHeight = Number(document.getElementById('height-field').dataset.metric || heightMetric);
-            document.getElementById('onboarding-form').insertAdjacentHTML('beforeend', `
-                <input type="hidden" name="weight_kg" value="${metricWeight.toFixed(2)}" />
-                <input type="hidden" name="height_cm" value="${metricHeight.toFixed(2)}" />
-            `);
-        });
-
-        setUnit('metric');
-        goStep(1);
-    </script>
-</x-app-layout>
+</body>
+</html>

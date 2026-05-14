@@ -10,16 +10,18 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=outfit:400,500,600,700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=outfit:400,500,600,700|syncopate:400,700&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased text-slate-100 bg-[#050814]">
-        <div class="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(34,197,94,0.08),_transparent_35%),linear-gradient(180deg,#040711_0%,#02040a_100%)] text-slate-100">
-            @include('layouts.navigation')
+    <body class="font-sans antialiased text-slate-100 bg-[#0A0A0B]">
+        <div class="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(0,242,255,0.05),_transparent_40%),linear-gradient(180deg,#0A0A0B_0%,#050505_100%)] text-slate-100 flex">
+            <!-- React Sidebar Navigation Mount Point -->
+            <div id="sidebar-navigation-root" data-path="{{ request()->path() }}"></div>
 
-            <main class="px-4 py-8 sm:px-6 lg:px-10 xl:px-12">
+            <!-- Main Content (padded to account for floating sidebar) -->
+            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-10 xl:px-12 lg:ml-28 w-full max-w-[100vw] overflow-x-hidden">
                 {{ $slot }}
             </main>
         </div>

@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'google_id',
+        'profile_photo_path',
     ];
 
     /**
@@ -47,8 +49,29 @@ class User extends Authenticatable
         ];
     }
     public function fitnessProfile()
-{
-    return $this->hasOne(\App\Models\FitnessProfile::class);
-}
-    
+    {
+        return $this->hasOne(\App\Models\FitnessProfile::class);
+    }
+
+    public function userProgram()
+    {
+        return $this->hasOne(\App\Models\UserProgram::class);
+    }
+
+    public function selectedProgram()
+    {
+        return $this->hasOneThrough(
+            \App\Models\Program::class,
+            \App\Models\UserProgram::class,
+            'user_id',
+            'id',
+            'id',
+            'program_id'
+        );
+    }
+
+    public function progress()
+    {
+        return $this->hasMany(\App\Models\UserProgress::class);
+    }
 }
