@@ -8,19 +8,19 @@
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
       :root {
-        --neon-green: #22C55E;
-        --neon-hover: #16a34a;
-        --bg-dark: #050505;
-        --card-bg: rgba(20, 20, 20, 0.4);
-        --border-color: rgba(255, 255, 255, 0.08);
+        --neon-cyan: #00F2FF;
+        --neon-hover: #55f7ff;
+        --bg-dark: #0A0A0B;
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --border-color: rgba(255, 255, 255, 0.05);
         --text-main: #ffffff;
-        --text-muted: #9ca3af;
+        --text-muted: #94A3B8;
       }
 
       body {
         margin: 0;
         padding: 0;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Outfit', sans-serif;
         background-color: var(--bg-dark);
         color: var(--text-main);
         min-height: 100vh;
@@ -34,7 +34,7 @@
       .bg-overlay {
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
-        background: radial-gradient(circle at 70% 50%, rgba(34, 197, 94, 0.05) 0%, rgba(0,0,0,0.9) 100%);
+        background: radial-gradient(circle at 70% 50%, rgba(0, 242, 255, 0.05) 0%, rgba(0,0,0,0.9) 100%);
         z-index: -2;
       }
       
@@ -70,14 +70,16 @@
       .logo-icon {
         width: 28px;
         height: 28px;
-        background: var(--neon-green);
+        background: var(--neon-cyan);
         mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 10V3L4 14h7v7l9-11h-7z'/%3E%3C/svg%3E") center/contain no-repeat;
         -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 10V3L4 14h7v7l9-11h-7z'/%3E%3C/svg%3E") center/contain no-repeat;
       }
       .logo-text {
-        font-size: 22px;
-        font-weight: 800;
-        letter-spacing: 2px;
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 4px;
+        font-family: 'Syncopate', sans-serif;
+        text-transform: uppercase;
         color: var(--text-main);
       }
       .nav-right {
@@ -93,7 +95,7 @@
         transition: color 0.2s;
       }
       .nav-link:hover {
-        color: var(--neon-green);
+        color: var(--neon-cyan);
       }
 
       /* Main Layout */
@@ -122,21 +124,23 @@
       .lightning-icon {
         width: 32px;
         height: 32px;
-        background: var(--neon-green);
+        background: var(--neon-cyan);
         mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 10V3L4 14h7v7l9-11h-7z'/%3E%3C/svg%3E") center/contain no-repeat;
         -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 10V3L4 14h7v7l9-11h-7z'/%3E%3C/svg%3E") center/contain no-repeat;
         margin-bottom: 24px;
-        filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.6));
+        filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.6));
       }
       .hero-title {
-        font-size: 64px;
-        font-weight: 800;
-        line-height: 1.1;
-        margin: 0 0 20px 0;
-        letter-spacing: -1px;
+        font-size: 56px;
+        font-weight: 900;
+        line-height: 1;
+        margin: 0 0 24px 0;
+        letter-spacing: -2px;
+        font-family: 'Syncopate', sans-serif;
+        text-transform: uppercase;
       }
       .hero-title .highlight {
-        color: var(--neon-green);
+        color: var(--neon-cyan);
       }
       .hero-subtitle {
         font-size: 18px;
@@ -161,7 +165,13 @@
         border: 1px solid var(--border-color);
         border-radius: 24px;
         padding: 48px 40px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+        box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(255,255,255,0.05);
+        animation: float 8s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
       }
 
       .form-header {
@@ -181,9 +191,9 @@
 
       /* Session Status */
       .session-status {
-        background: rgba(34, 197, 94, 0.1);
-        border: 1px solid rgba(34, 197, 94, 0.2);
-        color: var(--neon-green);
+        background: rgba(0, 242, 255, 0.1);
+        border: 1px solid rgba(0, 242, 255, 0.2);
+        color: var(--neon-cyan);
         padding: 12px 16px;
         border-radius: 12px;
         font-size: 14px;
@@ -220,9 +230,9 @@
       }
       .field-input:focus {
         outline: none;
-        border-color: var(--neon-green);
+        border-color: var(--neon-cyan);
         background: rgba(0, 0, 0, 0.7);
-        box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+        box-shadow: 0 0 0 4px rgba(0, 242, 255, 0.1);
       }
       .field-input.error {
         border-color: #ef4444;
@@ -273,8 +283,8 @@
         transition: all 0.2s;
       }
       .remember-checkbox:checked {
-        background: var(--neon-green);
-        border-color: var(--neon-green);
+        background: var(--neon-cyan);
+        border-color: var(--neon-cyan);
       }
       .remember-checkbox:checked::after {
         content: '';
@@ -292,7 +302,7 @@
         color: var(--text-muted);
       }
       .terms-link {
-        color: var(--neon-green);
+        color: var(--neon-cyan);
         text-decoration: none;
       }
       .terms-link:hover {
@@ -302,7 +312,7 @@
       /* Submit Button */
       .btn-submit {
         width: 100%;
-        background: var(--neon-green);
+        background: var(--neon-cyan);
         color: #000;
         border: none;
         border-radius: 12px;
@@ -312,12 +322,12 @@
         font-family: inherit;
         cursor: pointer;
         transition: all 0.2s;
-        box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+        box-shadow: 0 0 30px rgba(0, 242, 255, 0.4);
       }
       .btn-submit:hover {
         background: var(--neon-hover);
         transform: translateY(-1px);
-        box-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
+        box-shadow: 0 0 40px rgba(0, 242, 255, 0.6);
       }
       .btn-submit:active {
         transform: translateY(1px);
@@ -383,7 +393,7 @@
         transition: color 0.2s;
       }
       .form-footer a:hover {
-        color: var(--neon-green);
+        color: var(--neon-cyan);
       }
 
       /* Responsive */
@@ -427,7 +437,7 @@
 <nav class="navbar">
   <a href="/" class="nav-left">
     <div class="logo-icon"></div>
-    <span class="logo-text">WORKOUT</span>
+    <span class="logo-text">FITNEXUS</span>
   </a>
   <div class="nav-right">
     <a href="#" class="nav-link">Exercises</a>
