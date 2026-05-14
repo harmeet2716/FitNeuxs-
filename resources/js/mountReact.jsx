@@ -13,6 +13,8 @@ import BottomNavigation from './components/Navigation/BottomNavigation';
 
 import PricingPage from './components/Pricing/PricingPage';
 
+import ProfileSettings from './components/Profile/ProfileSettings';
+
 const mountComponent = (id, Component, props = {}) => {
     const el = document.getElementById(id);
     if (el) {
@@ -36,3 +38,4 @@ mountComponent('ai-coach-root', AICoach);
 mountComponent('wellness-hub-root', WellnessHub);
 mountComponent('bottom-navigation-root', BottomNavigation);
 mountComponent('pricing-page-root', PricingPage);
+mountComponent('profile-settings-root', ProfileSettings);
