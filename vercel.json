@@ -1,8 +1,7 @@
 {
     "version": 2,
-    "framework": null,
     "functions": {
-        "public/index.php": {
+        "api/index.php": {
             "runtime": "vercel-php@0.7.1"
         }
     },
@@ -20,16 +19,13 @@
             "dest": "/public/favicon.ico"
         },
         {
-            "src": "/robots.txt",
-            "dest": "/public/robots.txt"
-        },
-        {
             "src": "/(.*)",
-            "dest": "/public/index.php"
+            "dest": "/api/index.php"
         }
     ],
     "env": {
         "APP_ENV": "production",
+        "APP_DEBUG": "false",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
         "APP_PACKAGES_CACHE": "/tmp/packages.php",
