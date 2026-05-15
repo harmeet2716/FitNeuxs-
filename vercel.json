@@ -1,9 +1,9 @@
 {
     "version": 2,
-    "_comment": "Triggering redeploy for latest bridge fix",
+    "framework": null,
     "functions": {
         "api/index.php": {
-            "runtime": "vercel-php@0.7.1"
+            "runtime": "vercel-php@0.7.5"
         }
     },
     "routes": [
@@ -12,7 +12,7 @@
             "dest": "/public/build/$1"
         },
         {
-            "src": "/(css|js|images|fonts)/(.*)",
+            "src": "/(css|js|images|assets)/(.*)",
             "dest": "/public/$1/$2"
         },
         {
