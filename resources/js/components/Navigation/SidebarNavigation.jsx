@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-    Dumbbell, BarChart3, Apple, Sparkles, CreditCard, 
+    Home, Dumbbell, BarChart3, Apple, Sparkles, CreditCard, 
     User, Settings, LogOut, ChevronRight
 } from 'lucide-react';
 
@@ -12,9 +12,10 @@ const SidebarNavigation = ({ currentPath = '/dashboard' }) => {
         {
             title: 'Core Logs',
             items: [
-                { name: 'Workout Dashboard', icon: Dumbbell, href: '/dashboard' },
-                { name: 'Metrics', icon: BarChart3, href: '/progress' },
-                { name: 'Nutrition', icon: Apple, href: '/nutrition' },
+                { name: 'Command Center', icon: Home, href: '/dashboard' },
+                { name: 'Strength Vault', icon: Dumbbell, href: '/workout' },
+                { name: 'Metrics HUD', icon: BarChart3, href: '/progress' },
+                { name: 'Nutrition Bio', icon: Apple, href: '/nutrition' },
             ]
         },
         {
@@ -39,7 +40,7 @@ const SidebarNavigation = ({ currentPath = '/dashboard' }) => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             animate={{ width: isHovered ? '280px' : '88px' }}
-            className="fixed left-0 top-0 h-screen bg-black/20 backdrop-blur-xl border-r border-white/10 flex flex-col p-6 shadow-[10px_0_30px_rgba(0,0,0,0.5)] z-[100] transition-all duration-500 ease-out overflow-hidden"
+            className="hidden lg:flex fixed left-0 top-0 h-screen bg-black/20 backdrop-blur-xl border-r border-white/10 flex-col p-6 shadow-[10px_0_30px_rgba(0,0,0,0.5)] z-[100] transition-all duration-500 ease-out overflow-hidden"
         >
             {/* Brand Logo */}
             <div className="flex items-center gap-4 mb-12 px-2 h-12">

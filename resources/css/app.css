@@ -157,6 +157,15 @@ body {
   box-shadow: 0 0 40px rgba(0, 242, 255, 0.2);
 }
 
+.glow-red {
+  box-shadow: 0 0 40px rgba(244, 63, 94, 0.3);
+}
+
+.glow-cyan-border {
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
+  border-color: rgba(0, 242, 255, 0.3) !important;
+}
+
 .float-animation {
   animation: float 6s ease-in-out infinite;
 }

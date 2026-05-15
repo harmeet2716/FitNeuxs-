@@ -24,15 +24,12 @@ class FitnessProfileController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'goal'            => ['required', 'in:fat_loss,muscle_gain,strength,stay_active,boost_energy'],
+            'goal'            => ['required', 'in:lose_fat,build_muscle,maintenance'],
             'gender'          => ['required', 'in:male,female'],
             'age'             => ['required', 'integer', 'min:10', 'max:99'],
             'weight_kg'       => ['required', 'numeric', 'min:20', 'max:400'],
             'height_cm'       => ['required', 'numeric', 'min:50', 'max:280'],
             'activity_level'  => ['required', 'in:beginner,intermediate,advanced'],
-            'days_per_week'   => ['required', 'integer', 'min:1', 'max:7'],
-            'motivation'      => ['required', 'string', 'max:1000'],
-            'source'          => ['nullable', 'string', 'max:255'],
         ]);
 
         $multipliers = [
@@ -60,29 +57,17 @@ class FitnessProfileController extends Controller
         // ── TDEE ──────────────────────────────────────────────────────────
         $tdee = (int) round($bmr * $activityMultiplier);
 
-        // ── Estimated Body Fat % (Deurenberg) ────────────────────────────
-        $bf = (1.20 * $bmi) + (0.23 * $age) - ($gender === 'male' ? 16.2 : 5.4);
-        $bf = round(max(4, min(60, $bf)), 2);
-
-        // ── Lean Mass ─────────────────────────────────────────────────────
-        $leanMass = round($wKg * (1 - $bf / 100), 2);
-
         // ── Target Calories ───────────────────────────────────────────────
         $targetCalories = match ($data['goal']) {
-            'fat_loss'    => (int) round($tdee * 0.82),
-            'muscle_gain' => (int) round($tdee * 1.10),
+            'lose_fat'    => (int) round($tdee * 0.82),
+            'build_muscle' => (int) round($tdee * 1.10),
             default       => $tdee,
         };
 
-        // ── Macros ────────────────────────────────────────────────────────
-        $protein  = (int) round($leanMass * 2.2);
-        $fats     = (int) round($wKg * 0.88);
-        $carbsCal = max(0, $targetCalories - ($protein * 4) - ($fats * 9));
-        $carbs    = (int) round($carbsCal / 4);
-
-        // ── Persist (upsert per user so only 1 profile exists) ────────────
-        FitnessProfile::updateOrCreate(
-            ['user_id' => Auth::id()],
+        // ── Persist (Update FitnessProfile) ────────────────────────────
+        $user = Auth::user();
+        \App\Models\FitnessProfile::updateOrCreate(
+            ['user_id' => $user->id],
             [
                 'goal'             => $data['goal'],
                 'gender'           => $gender,
@@ -90,23 +75,15 @@ class FitnessProfileController extends Controller
                 'weight_kg'        => $wKg,
                 'height_cm'        => $hCm,
                 'activity_level'   => $data['activity_level'],
-                'days_per_week'    => $data['days_per_week'],
-                'motivation'       => $data['motivation'],
-                'source'           => $data['source'],
                 'bmi'              => $bmi,
-                'body_fat_percent' => $bf,
-                'lean_mass_kg'     => $leanMass,
                 'bmr'              => $bmr,
                 'tdee'             => $tdee,
                 'target_calories'  => $targetCalories,
-                'protein_g'        => $protein,
-                'carbs_g'          => $carbs,
-                'fats_g'           => $fats,
             ]
         );
 
         return redirect()->route('dashboard')
-                         ->with('success', 'Your training profile is ready! Welcome to your dashboard.');
+                         ->with('success', 'Your fitness profile has been initialized! Welcome to FitNexus.');
     }
 
     /**

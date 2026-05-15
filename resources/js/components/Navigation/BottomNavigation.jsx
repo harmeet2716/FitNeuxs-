@@ -12,7 +12,7 @@ const BottomNavigation = ({ activeTab, onTabChange }) => {
     ];
 
     return (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] w-auto">
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] w-auto lg:hidden">
             <nav className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2rem] px-4 py-3 flex items-center gap-2 shadow-2xl">
                 {tabs.map((tab) => {
                     const isActive = activeTab === tab.id;

@@ -21,9 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/programs', [\App\Http\Controllers\ProgramController::class, 'store'])->name('programs.store');
 
     Route::get('/workouts', [\App\Http\Controllers\WorkoutController::class, 'index'])->name('workouts.index');
-    Route::get('/workout/{day}', [\App\Http\Controllers\WorkoutController::class, 'show'])->name('workout.show');
-    Route::post('/workout/{day}/complete', [\App\Http\Controllers\WorkoutController::class, 'complete'])->name('workout.complete');
-
+    Route::redirect('/workout', '/workouts');
     Route::get('/progress', [\App\Http\Controllers\ProgressController::class, 'index'])->name('progress.index');
     Route::get('/wellness', function() { return view('wellness'); })->name('wellness');
     Route::get('/ai-coach', function() { return view('ai-coach'); })->name('ai-coach');

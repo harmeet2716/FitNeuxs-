@@ -393,16 +393,10 @@
 
     <form method="POST" action="{{ route('fitness.store') }}" id="onboarding-form">
       @csrf
-      <!-- Hidden fields for submission (using defaults to ensure validation passes) -->
+      <!-- Hidden fields for submission -->
       <input type="hidden" name="goal" id="goal-field">
-      <input type="hidden" name="gender" value="male">
-      <input type="hidden" name="activity_level" value="beginner">
-      <input type="hidden" name="motivation" value="health">
-      <input type="hidden" name="source" value="Search">
-      <input type="hidden" name="age" value="25">
-      <input type="hidden" name="weight_kg" value="70">
-      <input type="hidden" name="height_cm" value="175">
-      <input type="hidden" name="days_per_week" value="3">
+      <input type="hidden" name="gender" id="gender-field" value="male">
+      <input type="hidden" name="activity_level" id="activity-field" value="beginner">
 
       <!-- Step 1: Goal -->
       <div class="step-content active" id="step-1">
@@ -410,58 +404,110 @@
         <p class="step-subheading">Personalized programming starts here.</p>
 
         <div class="goal-list">
-          <div class="goal-card" data-value="fat_loss" onclick="selectGoal(this)">
+          <div class="goal-card" data-value="lose_fat" onclick="selectGoal(this)">
             <div class="goal-info">
-              <span class="goal-title">Reduce Body Fat</span>
+              <span class="goal-title">Lose Fat</span>
               <span class="goal-desc">Lean out and reveal definition</span>
             </div>
-            <!-- High contrast cutout style fitness body -->
             <div class="goal-thumb" style="background-image: url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80');"></div>
           </div>
 
-          <div class="goal-card" data-value="muscle_gain" onclick="selectGoal(this)">
+          <div class="goal-card" data-value="build_muscle" onclick="selectGoal(this)">
             <div class="goal-info">
-              <span class="goal-title">Gain Muscle</span>
+              <span class="goal-title">Build Muscle</span>
               <span class="goal-desc">Build size and raw strength</span>
             </div>
             <div class="goal-thumb" style="background-image: url('https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80');"></div>
           </div>
 
-          <div class="goal-card" data-value="stay_active" onclick="selectGoal(this)">
+          <div class="goal-card" data-value="maintenance" onclick="selectGoal(this)">
             <div class="goal-info">
-              <span class="goal-title">Stay Active</span>
+              <span class="goal-title">Maintenance</span>
               <span class="goal-desc">Maintain health and mobility</span>
             </div>
             <div class="goal-thumb" style="background-image: url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80');"></div>
           </div>
+        </div>
 
-          <div class="goal-card" data-value="boost_energy" onclick="selectGoal(this)">
-            <div class="goal-info">
-              <span class="goal-title">Boost Energy</span>
-              <span class="goal-desc">Enhance daily stamina and focus</span>
-            </div>
-            <div class="goal-thumb" style="background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80');"></div>
+        <button type="button" class="btn-next" id="btn-next-1" disabled onclick="nextStep(2)">Next Step</button>
+      </div>
+
+      <!-- Step 2: Personal Details -->
+      <div class="step-content" id="step-2">
+        <h1 class="step-heading">Tell us about yourself</h1>
+        <p class="step-subheading">This helps us calculate your baseline metabolic rate.</p>
+        
+        <div class="field-group" style="margin-bottom: 24px;">
+          <label class="progress-text">Gender</label>
+          <div class="tag-grid">
+            <div class="tag-btn active" id="gender-male" onclick="selectGender('male')">Male</div>
+            <div class="tag-btn" id="gender-female" onclick="selectGender('female')">Female</div>
           </div>
         </div>
 
-        <button type="button" class="btn-next" id="btn-next-1" disabled onclick="nextStep(2)">Next</button>
-      </div>
-
-      <!-- Step 2: Target Areas -->
-      <div class="step-content" id="step-2">
-        <h1 class="step-heading">Which areas would you like to improve?</h1>
-        <p class="step-subheading">Select your focus zones to customize workouts.</p>
-        
-        <div class="tag-grid">
-            <div class="tag-btn active" onclick="this.classList.toggle('active')">Full Body</div>
-            <div class="tag-btn" onclick="this.classList.toggle('active')">Arms & Shoulders</div>
-            <div class="tag-btn" onclick="this.classList.toggle('active')">Core & Abs</div>
-            <div class="tag-btn" onclick="this.classList.toggle('active')">Legs & Glutes</div>
-            <div class="tag-btn" onclick="this.classList.toggle('active')">Back & Posture</div>
+        <div class="field-group">
+          <label for="age" class="progress-text">Age</label>
+          <input type="number" name="age" id="age" value="25" class="tag-btn" style="width: 100%; text-align: left; background: rgba(0,0,0,0.3); border-color: var(--border-color); color: white; padding: 16px;">
         </div>
 
-        <button type="submit" class="btn-next">Build My Plan</button>
-        <button type="button" class="btn-skip" style="width:100%; margin-top: 16px; background: transparent; border: none; font-size: 15px;" onclick="nextStep(1)">Back</button>
+        <div style="display: flex; gap: 16px; margin-top: 32px;">
+          <button type="button" class="btn-skip" style="flex: 1;" onclick="nextStep(1)">Back</button>
+          <button type="button" class="btn-next" style="flex: 2;" onclick="nextStep(3)">Next Step</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Physical Metrics -->
+      <div class="step-content" id="step-3">
+        <h1 class="step-heading">Your stats</h1>
+        <p class="step-subheading">We need your height and weight for accuracy.</p>
+        
+        <div style="display: flex; gap: 20px; margin-bottom: 32px;">
+          <div style="flex: 1;">
+            <label for="height_cm" class="progress-text">Height (cm)</label>
+            <input type="number" name="height_cm" id="height_cm" value="175" class="tag-btn" style="width: 100%; text-align: left; background: rgba(0,0,0,0.3); border-color: var(--border-color); color: white; padding: 16px;">
+          </div>
+          <div style="flex: 1;">
+            <label for="weight_kg" class="progress-text">Weight (kg)</label>
+            <input type="number" name="weight_kg" id="weight_kg" value="70" class="tag-btn" style="width: 100%; text-align: left; background: rgba(0,0,0,0.3); border-color: var(--border-color); color: white; padding: 16px;">
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 16px;">
+          <button type="button" class="btn-skip" style="flex: 1;" onclick="nextStep(2)">Back</button>
+          <button type="button" class="btn-next" style="flex: 2;" onclick="nextStep(4)">Next Step</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Activity Level -->
+      <div class="step-content" id="step-4">
+        <h1 class="step-heading">How active are you?</h1>
+        <p class="step-subheading">Select your typical weekly activity level.</p>
+        
+        <div class="goal-list">
+          <div class="goal-card selected" id="activity-beginner" onclick="selectActivity('beginner')">
+            <div class="goal-info">
+              <span class="goal-title">Beginner</span>
+              <span class="goal-desc">Sedentary or light exercise (1-2 days)</span>
+            </div>
+          </div>
+          <div class="goal-card" id="activity-intermediate" onclick="selectActivity('intermediate')">
+            <div class="goal-info">
+              <span class="goal-title">Intermediate</span>
+              <span class="goal-desc">Moderate exercise (3-5 days)</span>
+            </div>
+          </div>
+          <div class="goal-card" id="activity-advanced" onclick="selectActivity('advanced')">
+            <div class="goal-info">
+              <span class="goal-title">Advanced</span>
+              <span class="goal-desc">Intense training (6-7 days)</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 16px;">
+          <button type="button" class="btn-skip" style="flex: 1;" onclick="nextStep(3)">Back</button>
+          <button type="submit" class="btn-next" style="flex: 2;">Finish & Build Plan</button>
+        </div>
       </div>
 
     </form>
@@ -474,6 +520,21 @@
     element.classList.add('selected');
     document.getElementById('goal-field').value = element.dataset.value;
     document.getElementById('btn-next-1').disabled = false;
+  }
+
+  function selectGender(gender) {
+    document.getElementById('gender-male').classList.remove('active');
+    document.getElementById('gender-female').classList.remove('active');
+    document.getElementById('gender-' + gender).classList.add('active');
+    document.getElementById('gender-field').value = gender;
+  }
+
+  function selectActivity(level) {
+    document.getElementById('activity-beginner').classList.remove('selected');
+    document.getElementById('activity-intermediate').classList.remove('selected');
+    document.getElementById('activity-advanced').classList.remove('selected');
+    document.getElementById('activity-' + level).classList.add('selected');
+    document.getElementById('activity-field').value = level;
   }
 
   function nextStep(step) {
@@ -490,6 +551,5 @@
     window.location.href = '/dashboard';
   }
 </script>
-
 </body>
 </html>

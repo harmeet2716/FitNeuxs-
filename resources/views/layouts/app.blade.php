@@ -15,6 +15,7 @@
         <!-- Scripts -->
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
     </head>
     <body class="font-sans antialiased text-slate-100 bg-[#0A0A0B]">
         <div class="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(0,242,255,0.05),_transparent_40%),linear-gradient(180deg,#0A0A0B_0%,#050505_100%)] text-slate-100 flex">
@@ -29,5 +30,6 @@
             <!-- Bottom Navigation Mount Point -->
             <div id="bottom-navigation-root" data-path="{{ request()->path() }}"></div>
         </div>
+        @livewireScripts
     </body>
 </html>
