@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Main Application
-FROM php:8.2-apache
+FROM php:8.3-apache
 
 # Install System Dependencies
 RUN apt-get update && apt-get install -y \
