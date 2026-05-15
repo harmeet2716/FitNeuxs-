@@ -13,6 +13,8 @@ FROM php:8.3-apache
 RUN apt-get update && apt-get install -y \
     git \
     curl \
+    libpng-dev \
+    libonig-dev \
     libxml2-dev \
     libzip-dev \
     libicu-dev \
@@ -28,7 +30,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install PHP Extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-avif
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl xml dom curl opcache
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl opcache
 
 # Install MongoDB Extension
 RUN pecl install mongodb && docker-php-ext-enable mongodb
