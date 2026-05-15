@@ -16,6 +16,8 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libzip-dev \
+    libicu-dev \
     zip \
     unzip \
     libssl-dev \
@@ -23,7 +25,7 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev
 
 # Install PHP Extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl
 
 # Install MongoDB Extension
 RUN pecl install mongodb && docker-php-ext-enable mongodb
@@ -47,7 +49,7 @@ COPY . .
 COPY --from=frontend-builder /app/public/build ./public/build
 
 # Install Backend Dependencies
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
 # Set Permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
