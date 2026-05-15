@@ -13,11 +13,13 @@ FROM php:8.2-apache
 RUN apt-get update && apt-get install -y \
     git \
     curl \
-    libpng-dev \
-    libonig-dev \
     libxml2-dev \
     libzip-dev \
     libicu-dev \
+    libwebp-dev \
+    libavif-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
     zip \
     unzip \
     libssl-dev \
@@ -25,7 +27,8 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev
 
 # Install PHP Extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-avif
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl xml dom curl opcache
 
 # Install MongoDB Extension
 RUN pecl install mongodb && docker-php-ext-enable mongodb
@@ -49,7 +52,7 @@ COPY . .
 COPY --from=frontend-builder /app/public/build ./public/build
 
 # Install Backend Dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --ignore-platform-reqs
 
 # Set Permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
