@@ -1,0 +1,14 @@
+/node_modules
+/vendor
+/storage/*.key
+/storage/pail
+.env
+.env.backup
+.env.production
+.git
+.github
+Dockerfile
+docker-compose.yml
+mongodb.zip
+mongodb_ext/
+*.log
